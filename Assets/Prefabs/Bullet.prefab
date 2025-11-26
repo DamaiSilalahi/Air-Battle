@@ -96,6 +96,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 466063244211456748}
+  - component: {fileID: -2731558616902001461}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -121,6 +122,18 @@ Transform:
   - {fileID: 7600803969326443417}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-2731558616902001461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414059169938328500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29d6cba19c98ba943bc29ae94e00140a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1281283230103996653
 GameObject:
   m_ObjectHideFlags: 0
@@ -561,7 +574,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: e4517245f9c7a964186f4fe5e5e84806, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
