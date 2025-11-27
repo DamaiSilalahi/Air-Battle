@@ -5,6 +5,7 @@ public class FlashWhenHit : MonoBehaviour
     public MeshRenderer rend;
     public Color flashColor = Color.red;
     public float flashTime = 0.2f;
+
     private Color originalColor;
 
     void Start()
@@ -12,7 +13,7 @@ public class FlashWhenHit : MonoBehaviour
         if (rend == null)
             rend = GetComponentInChildren<MeshRenderer>();
 
-        originalColor = rend.material.color;
+        originalColor = rend.material.GetColor("_Color");
     }
 
     public void Flash()
@@ -25,6 +26,6 @@ public class FlashWhenHit : MonoBehaviour
     {
         rend.material.color = flashColor;
         yield return new WaitForSeconds(flashTime);
-        rend.material.color = originalColor;
+        rend.material.SetColor("_Color", originalColor);
     }
 }
