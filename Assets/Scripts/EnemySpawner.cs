@@ -3,48 +3,34 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyPrefab;
-    public float minSpawnTime = 1f;
-    public float maxSpawnTime = 3f;
-
-    public Vector2 xRange = new Vector2(-6f, 6f);
-    public Vector2 zRange = new Vector2(10f, 12f);
-    public float yHeight = 0f; 
-
+    public float spawnInterval = 2f;
     private float timer = 0f;
-    private float currentSpawnTime;
-
-    void Start()
-    {
-        SetNextSpawnTime();
-    }
+    public float zPosition = 10f;
+    public float xMin = -6f;
+    public float xMax = 6f;
 
     void Update()
     {
         timer += Time.deltaTime;
 
-        if (timer >= currentSpawnTime)
+        if (timer >= spawnInterval)
         {
-            SpawnEnemy();
-            timer = 0f;
-            SetNextSpawnTime();
+            SpawnMusuh();
+            timer = 0f; 
         }
     }
 
-    void SetNextSpawnTime()
+    void SpawnMusuh()
     {
-        currentSpawnTime = Random.Range(minSpawnTime, maxSpawnTime);
-    }
+        if (enemyPrefab == null)
+        {
+            Debug.LogError("LUPA MASUKIN PREFAB MUSUH BOS!");
+            return;
+        }
 
-    void SpawnEnemy()
-    {
-        if (enemyPrefab == null) return;
+        float randomX = Random.Range(xMin, xMax);
+        Vector3 posisiMuncul = new Vector3(randomX, 0, zPosition);
 
-        // Posisi Acak 3D
-        float randomX = Random.Range(xRange.x, xRange.y);
-        float randomZ = Random.Range(zRange.x, zRange.y);
-
-        Vector3 spawnPos = new Vector3(randomX, yHeight, randomZ);
-
-        Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+        Instantiate(enemyPrefab, posisiMuncul, Quaternion.identity);
     }
 }
