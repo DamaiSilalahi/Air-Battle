@@ -15,14 +15,17 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        // === CEGAH PLAYER GERAK KETIKA GAME PAUSE ===
+        if (Time.timeScale == 0f) return;
+
         Debug.Log("Input Vertical: " + Input.GetAxisRaw("Vertical"));
+
         // --- 1. GERAK MANUAL (WASD) ---
         float moveX = Input.GetAxisRaw("Horizontal");
-        float moveZ = Input.GetAxisRaw("Vertical"); // Z untuk maju-mundur 3D
+        float moveZ = Input.GetAxisRaw("Vertical");
 
         Vector3 direction = new Vector3(moveX, 0f, moveZ).normalized;
 
-        // Pindahkan posisi secara manual (Tanpa MoveTo/Translate)
         if (direction.magnitude >= 0.1f)
         {
             transform.position += direction * moveSpeed * Time.deltaTime;
@@ -38,20 +41,17 @@ public class Player : MonoBehaviour
             Vector3 point = ray.GetPoint(rayDistance);
             Vector3 lookDir = point - transform.position;
 
-            // Hitung sudut rotasi Y
             float angle = Mathf.Atan2(lookDir.x, lookDir.z) * Mathf.Rad2Deg;
 
-            // Masukkan ke rotasi Y
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
         }
 
         // --- 3. TEMBAK (Klik Kiri) ---
         if (Input.GetMouseButtonDown(0))
         {
-            if (bulletPrefab != null) // Cek biar tidak error kalau lupa pasang peluru
+            if (bulletPrefab != null)
             {
-                // Munculkan peluru di posisi pemain, dengan rotasi pemain
-                Instantiate(bulletPrefab, transform.position, transform.rotation);
+                Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
             }
         }
     }

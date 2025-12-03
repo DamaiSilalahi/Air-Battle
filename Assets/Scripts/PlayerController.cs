@@ -1,41 +1,24 @@
 ﻿using UnityEngine;
 
-public class PlayerShootShaderTrigger : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    public Material playerMaterial;       // Material yang dipakai player (dengan shader custom)
-    public string shaderProperty = "_Glow";  // Nama parameter di shader yang mau diubah
-    public float glowValueOnShoot = 2f;      // Nilai efek saat menembak
-    public float glowValueNormal = 0.5f;     // Nilai normal / default
-    public float duration = 0.2f;            // Lama efek shader
-
-    private float timer;
-    private bool isGlowing;
-
-    void Start()
-    {
-        // Set shader ke kondisi normal di awal
-        playerMaterial.SetFloat(shaderProperty, glowValueNormal);
-    }
+    public GameManager gameManager;   // drag GameManager ke sini
 
     void Update()
     {
-        // Kalau klik kiri → trigger shader glowing
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.M))
         {
-            playerMaterial.SetFloat(shaderProperty, glowValueOnShoot);
-            timer = duration;
-            isGlowing = true;
+            Die();
         }
+    }
 
-        // Hitung waktu untuk kembali normal
-        if (isGlowing)
+    void Die()
+    {
+        gameObject.SetActive(false);
+
+        if (gameManager != null)
         {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
-            {
-                playerMaterial.SetFloat(shaderProperty, glowValueNormal);
-                isGlowing = false;
-            }
+            gameManager.FinishGame();   // Panggil FINISH dari GameManager
         }
     }
 }
