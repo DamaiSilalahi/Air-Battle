@@ -10,7 +10,29 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        // 1. Cari Kamera
         mainCamera = Camera.main;
+        if (mainCamera == null)
+        {
+            Debug.LogError("KAMERA TIDAK DITEMUKAN! Pastikan Tag MainCamera dipasang!");
+        }
+
+        // 2. --- [KODE BARU: MATIKAN TABRAKAN ANTAR LAYER] ---
+        // Ini solusi pengganti Matrix Physics yang hilang
+        int layerPlayer = LayerMask.NameToLayer("Player");
+        int layerBullet = LayerMask.NameToLayer("Bullet");
+
+        // Pastikan kedua layer itu ada sebelum dijalankan
+        if (layerPlayer != -1 && layerBullet != -1)
+        {
+            // Perintah sakti untuk mematikan tabrakan antara dua layer ini
+            Physics.IgnoreLayerCollision(layerPlayer, layerBullet);
+            Debug.Log("Tabrakan Player vs Bullet berhasil dimatikan lewat Script!");
+        }
+        else
+        {
+            Debug.LogError("Layer belum dibuat! Pastikan kamu sudah buat Layer 'Player' dan 'Bullet' di pojok kanan atas Unity.");
+        }
     }
 
     void Update()
@@ -18,6 +40,7 @@ public class Player : MonoBehaviour
         // === CEGAH PLAYER GERAK KETIKA GAME PAUSE ===
         if (Time.timeScale == 0f) return;
 
+        // Debugging Input (Bisa dihapus nanti kalau sudah lancar)
         Debug.Log("Input Vertical: " + Input.GetAxisRaw("Vertical"));
 
         // --- 1. GERAK MANUAL (WASD) ---
@@ -32,26 +55,34 @@ public class Player : MonoBehaviour
         }
 
         // --- 2. ROTASI MANUAL (Ikut Mouse) ---
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
-        float rayDistance;
-
-        if (groundPlane.Raycast(ray, out rayDistance))
+        if (mainCamera != null)
         {
-            Vector3 point = ray.GetPoint(rayDistance);
-            Vector3 lookDir = point - transform.position;
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+            float rayDistance;
 
-            float angle = Mathf.Atan2(lookDir.x, lookDir.z) * Mathf.Rad2Deg;
+            if (groundPlane.Raycast(ray, out rayDistance))
+            {
+                Vector3 point = ray.GetPoint(rayDistance);
+                Vector3 lookDir = point - transform.position;
 
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+                float angle = Mathf.Atan2(lookDir.x, lookDir.z) * Mathf.Rad2Deg;
+
+                transform.rotation = Quaternion.Euler(0f, angle, 0f);
+            }
         }
 
         // --- 3. TEMBAK (Klik Kiri) ---
         if (Input.GetMouseButtonDown(0))
         {
-            if (bulletPrefab != null)
+            if (bulletPrefab != null && firePoint != null)
             {
+                // Menggunakan firePoint.rotation agar peluru searah dengan moncong
                 Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            }
+            else
+            {
+                Debug.LogWarning("Bullet Prefab atau FirePoint belum dipasang di Inspector!");
             }
         }
     }
