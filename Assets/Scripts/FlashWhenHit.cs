@@ -13,7 +13,8 @@ public class FlashWhenHit : MonoBehaviour
         if (rend == null)
             rend = GetComponentInChildren<MeshRenderer>();
 
-        originalColor = rend.material.GetColor("_Color");
+        // Ambil warna asli dengan cara universal
+        originalColor = rend.material.color;
     }
 
     public void Flash()
@@ -24,8 +25,13 @@ public class FlashWhenHit : MonoBehaviour
 
     System.Collections.IEnumerator FlashRoutine()
     {
+        // Set warna jadi merah
         rend.material.color = flashColor;
+
+        // Tunggu
         yield return new WaitForSeconds(flashTime);
-        rend.material.SetColor("_Color", originalColor);
+
+        // Balikkan ke warna asli
+        rend.material.color = originalColor;
     }
 }

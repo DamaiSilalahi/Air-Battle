@@ -7,49 +7,50 @@ public class Bullet : MonoBehaviour
     public float lifeTime = 2f;
 
     [Header("Visual")]
-    public GameObject visualPeluru;  // Masukkan anak 'Charged' ke sini
-    public GameObject visualLedakan; // Masukkan anak 'Hit' ke sini
+    public GameObject visualPeluru;
+    public GameObject visualLedakan;
 
     private bool sudahMeledak = false;
 
     void Start()
     {
-        // 1. SETUP AWAL
-        // Pastikan saat lahir: Peluru NYALA, Ledakan MATI
         if (visualPeluru != null) visualPeluru.SetActive(true);
         if (visualLedakan != null) visualLedakan.SetActive(false);
 
-        // Hancurkan diri sendiri jika tidak kena apa-apa setelah sekian detik
         Destroy(gameObject, lifeTime);
     }
 
     void Update()
     {
-        // Jika sudah meledak, stop bergerak
         if (sudahMeledak) return;
 
-        // Gerak Manual (Maju ke depan)
         transform.Translate(0, 0, speed * Time.deltaTime);
     }
 
-    // --- BAGIAN PENTING: LOGIKA TABRAKAN ---
     void OnTriggerEnter(Collider other)
     {
-        // A. Jangan meledak kalau kena Diri Sendiri atau Teman
+        // Abaikan Player atau Bullet lain
         if (other.CompareTag("Player") || other.CompareTag("Bullet")) return;
 
-        // B. KHUSUS: Kalau kena MUSUH -> MELEDAK!
-        // PENTING: Cek Tag "Enemy" DULUAN sebelum cek isTrigger!
+        // --- KENA MUSUH ---
         if (other.CompareTag("Enemy"))
         {
+            // 🔥 Panggil FlashWhenHit (efek flash warna merah)
+            FlashWhenHit flash = other.GetComponentInParent<FlashWhenHit>();
+            if (flash != null) flash.Flash();
+
+            // ⚠️ BARIS DI BAWAH INI DIHAPUS karena class GlowFlash sudah dihapus:
+            // GlowFlash glow = other.GetComponentInParent<GlowFlash>();
+            // if (glow != null) glow.Flash();
+
             Meledak();
             return;
         }
 
-        // C. Kalau kena Trigger lain (misal sensor area/angin), abaikan
+        // Abaikan trigger lain
         if (other.isTrigger) return;
 
-        // D. Kalau kena Tembok/Benda Padat -> MELEDAK
+        // Kena benda padat -> meledak
         Meledak();
     }
 
@@ -58,16 +59,11 @@ public class Bullet : MonoBehaviour
         if (sudahMeledak) return;
         sudahMeledak = true;
 
-        // --- GANTI VISUAL ---
-        // Matikan gambar peluru (Charged)
         if (visualPeluru != null) visualPeluru.SetActive(false);
-        // Nyalakan gambar ledakan (Hit)
         if (visualLedakan != null) visualLedakan.SetActive(true);
 
-        // Hentikan gerakan peluru
         speed = 0;
 
-        // Hancurkan objek total setelah ledakan selesai (misal 0.5 detik)
         Destroy(gameObject, 0.5f);
     }
 }

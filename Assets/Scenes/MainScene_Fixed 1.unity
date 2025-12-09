@@ -666,6 +666,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5905254864894017860, guid: 49214aa4e317e8e4fa51d603e73c7afe, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1539912081}
+    - targetCorrespondingSourceObject: {fileID: 5905254864894017860, guid: 49214aa4e317e8e4fa51d603e73c7afe, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1539912086}
+    - targetCorrespondingSourceObject: {fileID: 5905254864894017860, guid: 49214aa4e317e8e4fa51d603e73c7afe, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1539912091}
   m_SourcePrefab: {fileID: 100100000, guid: 49214aa4e317e8e4fa51d603e73c7afe, type: 3}
 --- !u!1 &519239070
 GameObject:
@@ -1729,7 +1735,70 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4574f5d3b95636744a0c32c9500c2c6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerMaterial: {fileID: 2100000, guid: f5bda0ec676711e46bb107837f3a4745, type: 2}
+  glowColor: {r: 1, g: 1, b: 1, a: 1}
+  glowIntensity: 5
+  glowDuration: 0.1
   gameManager: {fileID: 1398325242}
+--- !u!23 &1539912086
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539912080}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: f5bda0ec676711e46bb107837f3a4745, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1539912091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539912080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b45ff56645321df4d85851bc5d35938b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashIntensity: 3
+  flashDuration: 0.1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
