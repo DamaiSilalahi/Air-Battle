@@ -23,34 +23,32 @@ public class Bullet : MonoBehaviour
     void Update()
     {
         if (sudahMeledak) return;
-
         transform.Translate(0, 0, speed * Time.deltaTime);
     }
 
     void OnTriggerEnter(Collider other)
     {
-        // Abaikan Player atau Bullet lain
         if (other.CompareTag("Player") || other.CompareTag("Bullet")) return;
 
-        // --- KENA MUSUH ---
         if (other.CompareTag("Enemy"))
         {
-            // 🔥 Panggil FlashWhenHit (efek flash warna merah)
             FlashWhenHit flash = other.GetComponentInParent<FlashWhenHit>();
             if (flash != null) flash.Flash();
 
-            // ⚠️ BARIS DI BAWAH INI DIHAPUS karena class GlowFlash sudah dihapus:
-            // GlowFlash glow = other.GetComponentInParent<GlowFlash>();
-            // if (glow != null) glow.Flash();
+            EnemyController musuh = other.GetComponent<EnemyController>();
+
+            if (musuh == null) musuh = other.GetComponentInParent<EnemyController>();
+
+            if (musuh != null)
+            {
+                musuh.KenaTembak();
+            }
 
             Meledak();
             return;
         }
 
-        // Abaikan trigger lain
         if (other.isTrigger) return;
-
-        // Kena benda padat -> meledak
         Meledak();
     }
 
@@ -63,7 +61,6 @@ public class Bullet : MonoBehaviour
         if (visualLedakan != null) visualLedakan.SetActive(true);
 
         speed = 0;
-
         Destroy(gameObject, 0.5f);
     }
 }
