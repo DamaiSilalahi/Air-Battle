@@ -61,6 +61,10 @@ public class EnemyController : MonoBehaviour
     public void KenaTembak()
     {
         if (sudahMati) return;
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.AddScoreForKill();
+        }
         sudahMati = true;
         if (myCollider != null) myCollider.enabled = false;
         StartCoroutine(AnimasiMati());

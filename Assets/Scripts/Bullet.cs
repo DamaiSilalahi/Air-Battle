@@ -36,12 +36,11 @@ public class Bullet : MonoBehaviour
             if (flash != null) flash.Flash();
 
             EnemyController musuh = other.GetComponent<EnemyController>();
-
             if (musuh == null) musuh = other.GetComponentInParent<EnemyController>();
 
             if (musuh != null)
             {
-                musuh.KenaTembak();
+                musuh.KenaTembak(); // 🚨 Panggilan Score terjadi di sini!
             }
 
             Meledak();
