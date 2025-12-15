@@ -23,7 +23,8 @@ public class Bullet : MonoBehaviour
     void Update()
     {
         if (sudahMeledak) return;
-        transform.Translate(0, 0, speed * Time.deltaTime);
+
+        transform.position += transform.forward * speed * Time.deltaTime;
     }
 
     void OnTriggerEnter(Collider other)
@@ -40,9 +41,8 @@ public class Bullet : MonoBehaviour
 
             if (musuh != null)
             {
-                musuh.KenaTembak(); // 🚨 Panggilan Score terjadi di sini!
+                musuh.KenaTembak(); 
             }
-
             Meledak();
             return;
         }
