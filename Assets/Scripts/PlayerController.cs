@@ -9,40 +9,16 @@ public class PlayerController : MonoBehaviour
 
     public GameManager gameManager;
 
-    // Referensi ke skrip baru
-    private GlowFlashRoutine glowRoutine;
+    private PlayerGlowController glowController;
 
     void Start()
     {
-        // Dapatkan skrip GlowFlashRoutine yang sudah terpasang
-        glowRoutine = GetComponent<GlowFlashRoutine>();
+        // Ambil PlayerGlowController (TANPA ubah sistem lain)
+        glowController = GetComponent<PlayerGlowController>();
 
-        if (glowRoutine != null)
+        if (glowController == null)
         {
-            // Dapatkan MeshRenderer dari objek ini atau anak objek
-            MeshRenderer meshRenderer = GetComponentInChildren<MeshRenderer>();
-
-            if (meshRenderer != null && meshRenderer.materials.Length > 0)
-            {
-                // Inisialisasi Material Instance
-                Material instance = meshRenderer.materials[0];
-
-                // Pindahkan pengaturan ke skrip GlowFlashRoutine
-                glowRoutine.glowMaterial = instance;
-                glowRoutine.flashTime = glowDuration;
-                glowRoutine.flashGlowColor = glowColor;
-                glowRoutine.flashIntensity = glowIntensity;
-
-                // Inisialisasi render properties
-                instance.EnableKeyword("_EMISSION");
-                instance.renderQueue = 3000; // Coba Transparent (lebih terlihat)
-                instance.SetColor("_EmissionColor", Color.black); // Mulai dari hitam
-            }
-            else
-            {
-                Debug.LogError("Mesh Renderer atau Material tidak ditemukan!");
-                glowRoutine = null; // Matikan routine jika gagal
-            }
+            Debug.LogError("PlayerGlowController tidak ditemukan di Player!");
         }
     }
 
@@ -63,9 +39,9 @@ public class PlayerController : MonoBehaviour
 
     void FlashGlow()
     {
-        if (glowRoutine != null)
+        if (glowController != null)
         {
-            glowRoutine.Flash(); // Panggil coroutine flash
+            glowController.TriggerGlow();
         }
     }
 
