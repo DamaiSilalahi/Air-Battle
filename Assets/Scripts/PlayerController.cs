@@ -54,4 +54,29 @@ public class PlayerController : MonoBehaviour
             gameManager.FinishGame();
         }
     }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // Cek apakah yang ditabrak adalah Musuh (berdasarkan Tag "Enemy")
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            // Panggil fungsi yang menangani kematian Player
+            HandlePlayerDeath();
+        }
+    }
+
+    void HandlePlayerDeath()
+    {
+        // Matikan objek Player secara visual
+        gameObject.SetActive(false);
+
+        // Perbaiki panggilan: Panggil fungsi GameOver() melalui Instance.
+        // Pastikan Anda memanggil fungsi pada GameManager.Instance
+        if (GameManager.Instance != null)
+        {
+            // Ganti: GameManager.GameOver();  (INI SALAH)
+            // Menjadi:
+            GameManager.Instance.FinishGame(); // ✅ INI YANG BENAR
+        }
+    }
 }

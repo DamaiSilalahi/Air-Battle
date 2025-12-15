@@ -6,6 +6,19 @@ public class GameManager : MonoBehaviour
     public GameObject StartPanel;
     public GameObject FinishPanel;
     public GameObject ScoreUIObject;
+    public static GameManager Instance { get; private set; }
+
+    void Awake()
+    {
+        // 2. Inisialisasi Instance di Awake()
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        // Opsional: DontDestroyOnLoad(gameObject);
+    }
 
     void Start()
     {
@@ -47,6 +60,12 @@ public class GameManager : MonoBehaviour
         AudioListener.pause = true;
 
         if (ScoreUIObject != null) ScoreUIObject.SetActive(false);
+
+        if (ScoreManager.Instance != null)
+        {
+            // Hapus (FinishPanel). Fungsi DisplayFinalScore() tidak memerlukan parameter.
+            ScoreManager.Instance.DisplayFinalScore();
+        }
     }
 
     public void RestartGame()

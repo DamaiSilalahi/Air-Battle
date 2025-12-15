@@ -1,34 +1,36 @@
 using UnityEngine;
-using TMPro; // PENTING: Harus ada karena kita pakai TextMeshPro
+using TMPro; // PENTING: Harus ada untuk menggunakan TextMeshPro
+using UnityEngine.SceneManagement;
 
 public class ScoreManager : MonoBehaviour
 {
-    // 1. SINGLETON: Membuat instance (contoh) dari ScoreManager ini
+    // 1. SINGLETON: Agar bisa diakses oleh EnemyController, GameManager, dll.
     public static ScoreManager Instance { get; private set; }
 
-    [Header("Settings")]
-    public TextMeshProUGUI ScoreText; // Slot untuk dihubungkan ke ScoreDisplay
+    [Header("In-Game Display")]
+    public TextMeshProUGUI ScoreText; // Slot untuk teks skor saat bermain (ScoreDisplay)
     public int scorePerKill = 10;
+
+    // PERUBAHAN NAMA HEADER: Agar sesuai dengan FinishGame() di GameManager
+    [Header("Finish Game Display")]
+    public TextMeshProUGUI finalScoreText; // Slot untuk teks skor di panel Finish Game
 
     private int currentScore = 0;
 
     void Awake()
     {
-        // Logika Singleton: Hanya izinkan satu instance dari ScoreManager
+        // Logika Singleton
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
         Instance = this;
-
-        // Memastikan objek ini tidak hancur saat berpindah scene (jika ada)
-        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
     {
-        // Inisialisasi tampilan skor saat game dimulai
+        // Pastikan skor ditampilkan 0 saat dimulai
         UpdateScoreDisplay();
     }
 
@@ -42,7 +44,7 @@ public class ScoreManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Memperbarui tampilan teks skor di layar.
+    /// Memperbarui tampilan teks skor di layar utama (saat bermain).
     /// </summary>
     private void UpdateScoreDisplay()
     {
@@ -52,12 +54,26 @@ public class ScoreManager : MonoBehaviour
         }
         else
         {
-            // Pesan peringatan jika Anda lupa menghubungkan ScoreText di Inspector
             Debug.LogWarning("ScoreText belum dihubungkan di Inspector ScoreManager!");
         }
     }
 
-    // Anda bisa tambahkan fungsi lain di sini, misalnya:
-    // public int GetCurrentScore() { return currentScore; }
-    // public void ResetScore() { currentScore = 0; UpdateScoreDisplay(); }
+    /// <summary>
+    /// Dipanggil oleh GameManager saat FinishGame() dipanggil, untuk menampilkan skor akhir.
+    /// </summary>
+    public void DisplayFinalScore()
+    {
+        if (finalScoreText != null)
+        {
+            finalScoreText.text = "SCORE AKHIR: " + currentScore;
+        }
+    }
+
+    /// <summary>
+    /// Memberikan nilai skor yang sedang berjalan (Dipanggil oleh GameManager).
+    /// </summary>
+    public int GetCurrentScore()
+    {
+        return currentScore;
+    }
 }
