@@ -2,6 +2,10 @@
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Player Stats")]
+    public int maxHealth = 5;
+    [SerializeField] private int currentHealth;
+
     [Header("Glow Settings")]
     public Color glowColor = Color.white;
     public float glowIntensity = 5f;
@@ -13,7 +17,9 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        // Ambil PlayerGlowController (TANPA ubah sistem lain)
+        currentHealth = maxHealth;
+        Debug.Log("Game Start! Player HP: " + currentHealth);
+
         glowController = GetComponent<PlayerGlowController>();
 
         if (glowController == null)
@@ -24,24 +30,36 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // TRIGGER GLOW SAAT TEMBAK
         if (Input.GetKeyDown(KeyCode.Space))
         {
             FlashGlow();
         }
 
-        // DIE TEST
         if (Input.GetKeyDown(KeyCode.M))
         {
             Die();
         }
     }
 
-    void FlashGlow()
+    public void FlashGlow()
     {
         if (glowController != null)
         {
             glowController.TriggerGlow();
+        }
+    }
+
+    public void TakeDamage(int damageAmount)
+    {
+        currentHealth -= damageAmount;
+
+        FlashGlow();
+
+        Debug.Log("Player Kena Tembak! Sisa HP: " + currentHealth);
+
+        if (currentHealth <= 0)
+        {
+            Die();
         }
     }
 
@@ -53,30 +71,23 @@ public class PlayerController : MonoBehaviour
         {
             gameManager.FinishGame();
         }
+        else if (GameManager.instance != null) 
+        {
+            GameManager.instance.FinishGame();
+        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        // Cek apakah yang ditabrak adalah Musuh (berdasarkan Tag "Enemy")
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            // Panggil fungsi yang menangani kematian Player
+
             HandlePlayerDeath();
         }
     }
 
     void HandlePlayerDeath()
     {
-        // Matikan objek Player secara visual
-        gameObject.SetActive(false);
-
-        // Perbaiki panggilan: Panggil fungsi GameOver() melalui Instance.
-        // Pastikan Anda memanggil fungsi pada GameManager.Instance
-        if (GameManager.Instance != null)
-        {
-            // Ganti: GameManager.GameOver();  (INI SALAH)
-            // Menjadi:
-            GameManager.Instance.FinishGame(); // ✅ INI YANG BENAR
-        }
+        Die();
     }
 }

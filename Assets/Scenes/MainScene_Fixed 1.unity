@@ -1944,6 +1944,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4574f5d3b95636744a0c32c9500c2c6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 5
+  currentHealth: 0
   glowColor: {r: 1, g: 1, b: 1, a: 1}
   glowIntensity: 5
   glowDuration: 0.1
@@ -1982,8 +1984,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -238, y: 490.98}
-  m_SizeDelta: {x: 2000, y: 458.046}
+  m_AnchoredPosition: {x: -130, y: 109}
+  m_SizeDelta: {x: 500, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2050715384
 MonoBehaviour:
@@ -2032,8 +2034,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 100
-  m_fontSizeBase: 100
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
