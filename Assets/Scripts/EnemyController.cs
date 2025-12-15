@@ -3,18 +3,13 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour
 {
-    [Header("Status Musuh")]
-    public int maxHP = 3;
-    private int currentHP;
-
     [Header("Gerak")]
     public float kecepatanGerak = 3f;
     public float durasiMengecil = 0.5f;
 
     [Header("Senjata")]
     public GameObject peluruJahatPrefab;
-    public Transform firePoint;
-    public float intervalTembak = 1.5f;
+    public float intervalTembak = 1f;
 
     private Transform playerPos;
     private bool sudahMati = false;
@@ -24,7 +19,6 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        currentHP = maxHP;
         skalaAwal = transform.localScale;
         myCollider = GetComponent<Collider>();
 
@@ -33,18 +27,26 @@ public class EnemyController : MonoBehaviour
         {
             playerPos = player.transform;
         }
+        else
+        {
+            Debug.LogWarning("Player dengan tag 'Player' tidak ditemukan!");
+        }
     }
 
     void Update()
     {
-        if (sudahMeledak() || playerPos == null) return;
+        if (sudahMati || playerPos == null) return;
 
         Vector3 arah = playerPos.position - transform.position;
         arah.y = 0;
-        arah.Normalize();
-        transform.position += arah * kecepatanGerak * Time.deltaTime;
 
-        transform.rotation = Quaternion.Euler(0, 180, 0);
+        if (arah != Vector3.zero)
+        {
+            arah.Normalize();
+            transform.position += arah * kecepatanGerak * Time.deltaTime;
+
+            transform.rotation = Quaternion.LookRotation(arah);
+        }
 
         timerNembak += Time.deltaTime;
         if (timerNembak >= intervalTembak)
@@ -56,34 +58,33 @@ public class EnemyController : MonoBehaviour
 
     void TembakPlayer()
     {
-        if (peluruJahatPrefab != null && playerPos != null)
-        {
-            Vector3 spawnPos = (firePoint != null) ? firePoint.position : transform.position;
+        if (peluruJahatPrefab == null) return;
 
-            Vector3 arahTembak = playerPos.position - spawnPos;
-            arahTembak.y = 0;
-
-            Quaternion rotasiPeluru = Quaternion.LookRotation(arahTembak);
-
-            Instantiate(peluruJahatPrefab, spawnPos, rotasiPeluru);
-        }
+        Instantiate(
+            peluruJahatPrefab,
+            transform.position,
+            transform.rotation
+        );
     }
-
-    bool sudahMeledak() { return sudahMati; }
 
     public void KenaTembak()
     {
         if (sudahMati) return;
 
-        currentHP--;
-        if (currentHP <= 0) Mati();
-    }
-
-    void Mati()
-    {
         sudahMati = true;
-        if (ScoreManager.Instance != null) ScoreManager.Instance.AddScoreForKill();
-        if (myCollider != null) myCollider.enabled = false;
+
+        if (SimpleScoreManager.instance != null)
+        {
+            SimpleScoreManager.instance.TambahSkor(10);
+        }
+        else
+        {
+            Debug.LogWarning("SimpleScoreManager belum ada di Scene!");
+        }
+
+        if (myCollider != null)
+            myCollider.enabled = false;
+
         StartCoroutine(AnimasiMati());
     }
 
@@ -97,7 +98,7 @@ public class EnemyController : MonoBehaviour
             transform.localScale = Vector3.Lerp(skalaAwal, Vector3.zero, progress);
             yield return null;
         }
-        transform.localScale = Vector3.zero;
+
         Destroy(gameObject);
     }
 }
