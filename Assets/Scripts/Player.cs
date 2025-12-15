@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Player : MonoBehaviour
 {
@@ -7,6 +7,9 @@ public class Player : MonoBehaviour
     public Transform firePoint;
 
     private Camera mainCamera;
+
+    // 🔹 TAMBAHAN (1)
+    private PlayerGlowController glowController;
 
     void Start()
     {
@@ -17,15 +20,15 @@ public class Player : MonoBehaviour
             Debug.LogError("KAMERA TIDAK DITEMUKAN! Pastikan Tag MainCamera dipasang!");
         }
 
+        // 🔹 TAMBAHAN (2)
+        glowController = GetComponent<PlayerGlowController>();
+
         // 2. --- [KODE BARU: MATIKAN TABRAKAN ANTAR LAYER] ---
-        // Ini solusi pengganti Matrix Physics yang hilang
         int layerPlayer = LayerMask.NameToLayer("Player");
         int layerBullet = LayerMask.NameToLayer("Bullet");
 
-        // Pastikan kedua layer itu ada sebelum dijalankan
         if (layerPlayer != -1 && layerBullet != -1)
         {
-            // Perintah sakti untuk mematikan tabrakan antara dua layer ini
             Physics.IgnoreLayerCollision(layerPlayer, layerBullet);
             Debug.Log("Tabrakan Player vs Bullet berhasil dimatikan lewat Script!");
         }
@@ -37,10 +40,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        // === CEGAH PLAYER GERAK KETIKA GAME PAUSE ===
         if (Time.timeScale == 0f) return;
 
-        // Debugging Input (Bisa dihapus nanti kalau sudah lancar)
         Debug.Log("Input Vertical: " + Input.GetAxisRaw("Vertical"));
 
         // --- 1. GERAK MANUAL (WASD) ---
@@ -67,7 +68,6 @@ public class Player : MonoBehaviour
                 Vector3 lookDir = point - transform.position;
 
                 float angle = Mathf.Atan2(lookDir.x, lookDir.z) * Mathf.Rad2Deg;
-
                 transform.rotation = Quaternion.Euler(0f, angle, 0f);
             }
         }
@@ -77,8 +77,11 @@ public class Player : MonoBehaviour
         {
             if (bulletPrefab != null && firePoint != null)
             {
-                // Menggunakan firePoint.rotation agar peluru searah dengan moncong
                 Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+
+                // 🔹 TAMBAHAN (3) — TRIGGER GLOW
+                if (glowController != null)
+                    glowController.TriggerGlow();
             }
             else
             {
