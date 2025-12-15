@@ -1,37 +1,38 @@
 using UnityEngine;
+using System.Collections;
 
 public class FlashWhenHit : MonoBehaviour
 {
-    public MeshRenderer rend;
-    public Color flashColor = Color.red;
     public float flashTime = 0.2f;
 
-    private Color originalColor;
+    private Material mat;
+    private Coroutine flashRoutine;
 
-    void Start()
+    void Awake()
     {
-        if (rend == null)
-            rend = GetComponentInChildren<MeshRenderer>();
+        MeshRenderer rend = GetComponentInChildren<MeshRenderer>();
+        mat = rend.material;
 
-        // Ambil warna asli dengan cara universal
-        originalColor = rend.material.color;
+        // pastikan awalnya KUNING
+        mat.SetFloat("_FlashAmount", 0f);
     }
 
     public void Flash()
     {
-        StopAllCoroutines();
-        StartCoroutine(FlashRoutine());
+        if (flashRoutine != null)
+            StopCoroutine(flashRoutine);
+
+        flashRoutine = StartCoroutine(FlashRoutine());
     }
 
-    System.Collections.IEnumerator FlashRoutine()
+    IEnumerator FlashRoutine()
     {
-        // Set warna jadi merah
-        rend.material.color = flashColor;
+        // jadi MERAH
+        mat.SetFloat("_FlashAmount", 1f);
 
-        // Tunggu
         yield return new WaitForSeconds(flashTime);
 
-        // Balikkan ke warna asli
-        rend.material.color = originalColor;
+        // balik KUNING
+        mat.SetFloat("_FlashAmount", 0f);
     }
 }

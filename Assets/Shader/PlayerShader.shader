@@ -1,12 +1,5 @@
-Shader "Custom/PlayerShader"
+Shader "Custom/PlayerBlueShader"
 {
-    Properties
-    {
-        _Color ("Player Tint Color", Color) = (1,1,1,1) 
-        
-        _MainTex ("Player Texture (Albedo)", 2D) = "white" {} 
-    }
-
     SubShader
     {
         Tags { "RenderType"="Opaque" }
@@ -17,12 +10,11 @@ Shader "Custom/PlayerShader"
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            
             #include "UnityCG.cginc"
 
             sampler2D _MainTex;
-            float4 _MainTex_ST; 
-            float4 _Color;
+            float4 _MainTex_ST;
+
             struct appdata
             {
                 float4 vertex : POSITION;
@@ -45,10 +37,11 @@ Shader "Custom/PlayerShader"
 
             float4 frag (v2f i) : SV_Target
             {
-                float4 textureColor = tex2D(_MainTex, i.uv);
-                float4 finalColor = textureColor * _Color;
+                float4 texColor = tex2D(_MainTex, i.uv);
 
-                return finalColor;
+                float4 blueColor = float4(0, 0, 1, 1);
+
+                return texColor * blueColor;
             }
             ENDHLSL
         }
