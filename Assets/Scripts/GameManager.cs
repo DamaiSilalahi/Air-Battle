@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
 {
     public GameObject StartPanel;
     public GameObject FinishPanel;
+    public GameObject ScoreUIObject;
 
     void Start()
     {
@@ -24,6 +25,8 @@ public class GameManager : MonoBehaviour
 
         StartPanel.SetActive(true);
         FinishPanel.SetActive(false);
+
+        if (ScoreUIObject != null) ScoreUIObject.SetActive(false);
     }
 
     public void StartGame()
@@ -33,6 +36,8 @@ public class GameManager : MonoBehaviour
 
         Time.timeScale = 1f;
         AudioListener.pause = false;
+
+        if (ScoreUIObject != null) ScoreUIObject.SetActive(true);
     }
 
     public void FinishGame()
@@ -40,6 +45,8 @@ public class GameManager : MonoBehaviour
         FinishPanel.SetActive(true);
         Time.timeScale = 0f;
         AudioListener.pause = true;
+
+        if (ScoreUIObject != null) ScoreUIObject.SetActive(false);
     }
 
     public void RestartGame()
