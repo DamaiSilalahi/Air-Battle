@@ -3,13 +3,18 @@ using System.Collections;
 
 public class EnemyController : MonoBehaviour
 {
+    [Header("Status Musuh")]
+    public int maxHP = 3;
+    private int currentHP;
+
     [Header("Gerak")]
     public float kecepatanGerak = 3f;
     public float durasiMengecil = 0.5f;
 
     [Header("Senjata")]
-    public GameObject peluruJahatPrefab; 
-    public float intervalTembak = 1f;   
+    public GameObject peluruJahatPrefab;
+    public Transform firePoint;
+    public float intervalTembak = 1.5f;
 
     private Transform playerPos;
     private bool sudahMati = false;
@@ -19,6 +24,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+        currentHP = maxHP;
         skalaAwal = transform.localScale;
         myCollider = GetComponent<Collider>();
 
@@ -34,25 +40,32 @@ public class EnemyController : MonoBehaviour
         if (sudahMeledak() || playerPos == null) return;
 
         Vector3 arah = playerPos.position - transform.position;
+        arah.y = 0;
         arah.Normalize();
         transform.position += arah * kecepatanGerak * Time.deltaTime;
 
-        float sudut = Mathf.Atan2(arah.y, arah.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, sudut + 90);
+        transform.rotation = Quaternion.Euler(0, 180, 0);
 
         timerNembak += Time.deltaTime;
         if (timerNembak >= intervalTembak)
         {
             TembakPlayer();
-            timerNembak = 0f; 
+            timerNembak = 0f;
         }
     }
 
     void TembakPlayer()
     {
-        if (peluruJahatPrefab != null)
+        if (peluruJahatPrefab != null && playerPos != null)
         {
-            Instantiate(peluruJahatPrefab, transform.position, transform.rotation);
+            Vector3 spawnPos = (firePoint != null) ? firePoint.position : transform.position;
+
+            Vector3 arahTembak = playerPos.position - spawnPos;
+            arahTembak.y = 0;
+
+            Quaternion rotasiPeluru = Quaternion.LookRotation(arahTembak);
+
+            Instantiate(peluruJahatPrefab, spawnPos, rotasiPeluru);
         }
     }
 
@@ -61,11 +74,15 @@ public class EnemyController : MonoBehaviour
     public void KenaTembak()
     {
         if (sudahMati) return;
-        if (ScoreManager.Instance != null)
-        {
-            ScoreManager.Instance.AddScoreForKill();
-        }
+
+        currentHP--;
+        if (currentHP <= 0) Mati();
+    }
+
+    void Mati()
+    {
         sudahMati = true;
+        if (ScoreManager.Instance != null) ScoreManager.Instance.AddScoreForKill();
         if (myCollider != null) myCollider.enabled = false;
         StartCoroutine(AnimasiMati());
     }

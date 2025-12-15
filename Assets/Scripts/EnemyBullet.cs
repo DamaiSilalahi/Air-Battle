@@ -5,6 +5,8 @@ public class EnemyBullet : MonoBehaviour
     public float speed = 8f;
     public float lifeTime = 3f;
 
+    public int damage = 1;
+
     void Start()
     {
         Destroy(gameObject, lifeTime);
@@ -23,8 +25,7 @@ public class EnemyBullet : MonoBehaviour
 
             if (player != null)
             {
-
-                player.SendMessage("Die", SendMessageOptions.DontRequireReceiver);
+                player.TakeDamage(damage);
             }
             else
             {
