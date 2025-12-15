@@ -3,13 +3,11 @@ using System.Collections;
 
 public class PlayerGlowController : MonoBehaviour
 {
-    [Header("Glow Object")]
     public GameObject glowObject;
 
-    [Header("Glow Settings")]
     public float glowDuration = 0.15f;
 
-    Coroutine glowCoroutine; // 🔹 TAMBAHAN KECIL
+    Coroutine glowCoroutine; 
 
     void Start()
     {
@@ -21,7 +19,7 @@ public class PlayerGlowController : MonoBehaviour
     {
         if (glowObject == null) return;
 
-        // 🔹 HENTIKAN glow sebelumnya
+        // HENTIKAN glow sebelumnya
         if (glowCoroutine != null)
             StopCoroutine(glowCoroutine);
 
