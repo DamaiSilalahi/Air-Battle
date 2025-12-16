@@ -6,7 +6,7 @@ public class SimpleScoreManager : MonoBehaviour
 
     [Header("Hubungkan UI Disini")]
     public Text scoreText;
-    public Text finalScoreText; 
+    public Text finalScoreText;
     private int score = 0;
 
     void Awake()
@@ -32,7 +32,7 @@ public class SimpleScoreManager : MonoBehaviour
         UpdateUI();
     }
 
-    void UpdateUI()
+    public void UpdateUI()
     {
         if (scoreText != null)
         {
