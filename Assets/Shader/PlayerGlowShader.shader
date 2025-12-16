@@ -2,7 +2,6 @@ Shader "Custom/PlayerGlowShader"
 {
     Properties
     {
-        _Color ("Main Color", Color) = (1,1,1,1)
         _Glow ("Glow Intensity", Range(1, 3)) = 1
     }
 
@@ -27,7 +26,6 @@ Shader "Custom/PlayerGlowShader"
                 float4 pos : SV_POSITION;
             };
 
-            float4 _Color;
             float _Glow;
 
             v2f vert (appdata v)
@@ -39,7 +37,7 @@ Shader "Custom/PlayerGlowShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                return _Color * _Glow;
+                return fixed4(_Glow, _Glow, _Glow, 1); // glow putih
             }
             ENDCG
         }
