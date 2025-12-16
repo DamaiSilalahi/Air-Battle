@@ -61,9 +61,11 @@ public class GameManager : MonoBehaviour
 
         if (ScoreUIObject != null) ScoreUIObject.SetActive(false);
 
-        if (ScoreManager.Instance != null)
+        // Pastikan pemanggilan menggunakan nama class yang benar (SimpleScoreManager)
+        if (SimpleScoreManager.instance != null)
         {
-            ScoreManager.Instance.DisplayFinalScore();
+            // Panggil fungsi publik yang sekarang sudah bisa diakses
+            SimpleScoreManager.instance.UpdateUI();
         }
     }
 
